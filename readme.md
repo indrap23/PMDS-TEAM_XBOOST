@@ -5,6 +5,7 @@ Steps running fastapi (after pulling the repo to local pc) :
     <li>Open the anaconda prompt terminal</li>
     <li>cd to repo location if haven't set it in terminal yet</li>
        <li>Create new environment using the command Conda create --name [ENVIRONMENT NAME] </li>
+       <li>Aciticate your new environment using the command Conda activate [ENVIRONMENT NAME] </li>
        <li>install dependencies using pip install -r requirements.txt </li>
        <li>run the local uvicorn server to serve the api using command</li>
   <b>uvicorn main:app --reload </b>
