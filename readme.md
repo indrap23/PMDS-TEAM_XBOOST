@@ -3,9 +3,11 @@
 
 ## **Problem Statement**
 Credit scoring is an important part of the lending process by bank and financial service company. By accurately scoring a customer according to how likely they are able to pay back their loan, company can have confidence in distributing loans and grow their business.
+
+## **Objectives**
 Our goal is therefore to create a model that can accurately predict the probability of a customer paying back their loan, which we will apply to new customer later on.
 
-Steps running fastapi (after pulling the repo to local pc) :
+## **Steps running fastapi (after pulling the repo to local pc) :**
 <br><b> With Anaconda </b>
   <br>
   <ol>
