@@ -1,5 +1,6 @@
 from pyexpat import model
 from fastapi import FastAPI, Body
+from fastapi.middleware.cors import CORSMiddleware
 import joblib
 
 from app.models import RequestBody, ResponseBody
@@ -10,9 +11,25 @@ from app.helper import (
 
 app = FastAPI()
 
+# add CORS middleware
+origins = [
+    "http://localhost:3000",
+    "localhost:3000"
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+
 try :
-    model_bureau = joblib.load("./assets/xgb_retrain_bureau.pkl")
-    model_no_bureau = joblib.load("./assets/xgb_retrain_no_bureau.pkl")
+    model_bureau = joblib.load("backend/assets/xgb_retrain_bureau.pkl")
+    model_no_bureau = joblib.load("backend/assets/xgb_retrain_no_bureau.pkl")
     print("Model Loaded")
 except:
     print("Fail to Load Model")
