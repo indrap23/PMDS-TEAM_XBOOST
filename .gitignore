@@ -3,3 +3,4 @@ data/
 output/
 ../.vscode/
 ../__pycache__/
+jupyter/

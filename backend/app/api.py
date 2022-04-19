@@ -1,7 +1,19 @@
-from pyexpat import model
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 import joblib
+import warnings   
+warnings.filterwarnings("ignore")
+
+from logging.config import dictConfig
+import logging
+from app.config import LogConfig
+
+dictConfig(LogConfig().dict())
+logger = logging.getLogger("pmds")
+
 
 from app.models import RequestBody, ResponseBody
 from app.helper import (
@@ -11,12 +23,23 @@ from app.helper import (
 
 app = FastAPI()
 
+# add logging for invalid request error 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    content_log=jsonable_encoder({"detail": exc.errors(), "body": exc.body})
+    content_msg =  content_log.get("detail")[0].get("msg")  # only get the message
+    content_loc = content_log.get("detail")[0].get("loc")[1]  # get the error field
+    logger.error(content_log)
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=content_msg + ", field : " + content_loc
+    )
+
 # add CORS middleware
 origins = [
     "http://localhost:3000",
     "localhost:3000"
 ]
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,8 +51,13 @@ app.add_middleware(
 
 
 try :
-    model_bureau = joblib.load("backend/assets/xgb_retrain_bureau.pkl")
-    model_no_bureau = joblib.load("backend/assets/xgb_retrain_no_bureau.pkl")
+    # for uvicorn
+    # model_bureau = joblib.load("backend/assets/xgb_retrain_bureau.pkl")
+    # model_no_bureau = joblib.load("backend/assets/xgb_retrain_no_bureau.pkl")
+
+    # for gunicorn
+    model_bureau = joblib.load("./assets/xgb_retrain_bureau.pkl")
+    model_no_bureau = joblib.load("./assets/xgb_retrain_no_bureau.pkl")
     print("Model Loaded")
 except:
     print("Fail to Load Model")
@@ -81,5 +109,5 @@ async def testing(
         score, loan_dec = predict_score(t, model_bureau)
     else:
         score, loan_dec = predict_score(t, model_no_bureau)
-    print("Predicted Score :", score)
+    logger.info(f"predicting..{score}")
     return {"LoanDecision" : loan_dec}
