@@ -11,13 +11,19 @@ httptools==0.4.0
 idna==3.3
 itsdangerous==2.1.2
 Jinja2==3.1.1
+joblib==1.1.0
 MarkupSafe==2.1.1
+numpy==1.22.3
 orjson==3.6.8
+pandas==1.4.2
 pydantic==1.9.0
+python-dateutil==2.8.2
 python-dotenv==0.20.0
 python-multipart==0.0.5
+pytz==2022.1
 PyYAML==6.0
 requests==2.27.1
+scipy==1.8.0
 six==1.16.0
 sniffio==1.2.0
 starlette==0.17.1
@@ -28,3 +34,4 @@ uvicorn==0.17.6
 uvloop==0.16.0
 watchgod==0.8.2
 websockets==10.3
+xgboost==1.6.0
