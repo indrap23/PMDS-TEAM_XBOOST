@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Form</title>
+</head>
+<body>
+    <div align="center"></div>
+    <h1>Credit Scoring: XGBoost</h1>
+    <form method="post">
+        Enter Customer Age :
+        <input type="int" placeholder="Age" aria-label="default input example" required='required' name="age">
+        </br></br>
+        Enter Customer Income:
+        <input type="int" placeholder="Income" aria-label="default input example" required='required' name="income">
+        </br></br>
+        Gender:
+        <select aria-label="Default select example" type="text" required='required' name="gender">
+            <option value="Female"> Female </option>
+            <option value="Male"> Male</option>
+        </select>
+        </br></br>
+        What's customer education? :
+        <select aria-label="Default select example" placeholder="education" type="text" name="education">
+            <option value="Master's Degree/Post graduate"> Master's Degree/Post graduate </option>
+            <option value="Bachelor Degree"> Bachelor Degree </option>
+            <option value="Diploma"> Diploma </option>
+            <option value="High School"> High School </option>
+            <option value="Other"> Other </option>
+        </select>
+        </br></br>
+        What's customer Loan Purpose? :
+        <select aria-label="Default select example" placeholder="loan_purpose" type="text" required='required' name="loan_purpose">
+            <option value="Bills"> Bills </option>
+            <option value="Credit card"> Credit card </option>
+            <option value="Education"> Education </option>
+            <option value="Electronic unsecured loan"> Electronic unsecured loan </option>
+            <option value="Holiday"> Holiday </option>
+            <option value="Housing loan"> Housing loan </option>
+            <option value="Investment"> Investment </option>
+            <option value="Other"> Other </option>
+            <option value="Renovation"> Renovation </option>
+            <option value="Venture capital"> Venture capital </option>
+            <option value="Working Capital"> Working Capital </option>
+            <option value="Car/Motorcycle"> Car/Motorcycle </option>
+        </select>
+        </br></br>
+        has customer applied Loan before? :
+        <select aria-label="Default select example" placeholder="hasApplied" type="text" name="hasApplied">
+            <option value="Yes"> Yes </option>
+            <option value="No"> No</option>
+        </select>
+        </br></br>
+        do customers have income verification?:
+        <select aria-label="Default select example" placeholder="hasIncome" type="text" required='required' name="hasIncome">
+            <option value="Yes"> Yes </option>
+            <option value="No"> No</option>
+        </select>
+        </br></br>
+        Have Bureau data? :
+        Yes <input type="radio" onclick="javascript:yesnoCheck();" name="bureau" id="yesCheck" value ="Yes"> \
+        No <input type="radio" onclick="javascript:yesnoCheck();" name="bureau" id="noCheck" value ="No"><br>
+        <div id="ifYes" style="display:none">
+             much customers have loan without delay?:
+            <input type="int" placeholder="number loan without delay" aria-label="default input example" name="withoutdelay">
+            </br></br>
+            how much customers have loan with delay?:
+            <input type="int" placeholder="number loan with delay" aria-label="default input example" name="withdelay">
+            </br></br>
+        </div>
+        <input type="submit">
+    </form>
+    <p>Result: {{ result }}</p>
+</body>
+
+<script type="text/javascript">
+
+    function yesnoCheck() {
+        if (document.getElementById('yesCheck').checked) {
+            document.getElementById('ifYes').style.display = 'block';
+        }
+        else document.getElementById('ifYes').style.display = 'none';
+    }
+    
+    </script>
+</html>
