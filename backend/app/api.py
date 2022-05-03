@@ -49,20 +49,17 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-model_bureau = joblib.load("backend/assets/xgb_retrain_bureau.pkl")
-model_no_bureau = joblib.load("backend/assets/xgb_retrain_no_bureau.pkl")
+try :
+    # for uvicorn
+    model_bureau = joblib.load("backend/assets/xgb_retrain_bureau.pkl")
+    model_no_bureau = joblib.load("backend/assets/xgb_retrain_no_bureau.pkl")
 
-# try :
-#     # for uvicorn
-#     model_bureau = joblib.load("backend/assets/xgb_retrain_bureau.pkl")
-#     model_no_bureau = joblib.load("backend/assets/xgb_retrain_no_bureau.pkl")
-
-#     # for gunicorn
-#     # model_bureau = joblib.load("./assets/xgb_retrain_bureau.pkl")
-#     # model_no_bureau = joblib.load("./assets/xgb_retrain_no_bureau.pkl")
-#     print("Model Loaded")
-# except:
-#     print("Fail to Load Model")
+    # for gunicorn
+    # model_bureau = joblib.load("./assets/xgb_retrain_bureau.pkl")
+    # model_no_bureau = joblib.load("./assets/xgb_retrain_no_bureau.pkl")
+    print("Model Loaded")
+except:
+    print("Fail to Load Model")
 
 @app.get("/")
 async def root():
