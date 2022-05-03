@@ -1,6 +1,9 @@
+import re
 from fastapi import FastAPI, Body, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 import joblib
@@ -22,6 +25,8 @@ from app.helper import (
     predict_score)
 
 app = FastAPI()
+templates = Jinja2Templates(directory='./frontend/templates/')
+app.mount("/statics", StaticFiles(directory="./frontend/statics"), name="statics")
 
 # add logging for invalid request error 
 @app.exception_handler(RequestValidationError)
@@ -64,6 +69,40 @@ except:
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+@app.get('/index')
+def index_html(request: Request):
+    # result = 'Credit Scoring Results'
+    return templates.TemplateResponse('index2.html', context={'request': request})
+
+@app.post("/predict")
+async def get_prediction(request: Request):
+    reqDataForm = await request.form()
+    reqData = jsonable_encoder(reqDataForm)
+    reqData.pop('firstName', None)
+    reqData.pop('lastName', None)
+    if reqData.get("hasIncome") == "No Income Proof":
+        reqData['hasIncome'] = "No"
+    else:
+        reqData['hasIncome'] = "Yes"
+
+    if reqData.get("bureau") == "Yes":
+        reqData['bureau'] = {"loanNoDelay" : int(reqData.get("loanNoDelay")), "loanWithDelay" : int(reqData.get("loanNoDelay"))}
+    else:
+        reqData['bureau'] = None
+    reqData.pop('loanNoDelay', None)
+    reqData.pop('loanWithDelay', None)
+
+    reqData['age'] = int(reqData['age'])
+    reqData['income'] = int(reqData['income'])
+
+    t = feature_engineering(parse_input(reqData))
+    if reqData.get("bureau"):
+        score, loan_dec = predict_score(t, model_bureau)
+    else:
+        score, loan_dec = predict_score(t, model_no_bureau)
+    logger.info(f"predicting..{score}")
+    return {"LoanDecision" : loan_dec}
 
 @app.post("/test", response_model=ResponseBody)
 async def testing(
