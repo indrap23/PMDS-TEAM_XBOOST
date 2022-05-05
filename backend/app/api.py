@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import RedirectResponse
 import joblib
 import warnings   
 warnings.filterwarnings("ignore")
@@ -21,6 +22,7 @@ logger = logging.getLogger("pmds")
 from app.models import RequestBody, ResponseBody
 from app.helper import (
     feature_engineering, 
+    parse_request,
     parse_input,
     predict_score)
 
@@ -68,7 +70,10 @@ except:
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    url = app.url_path_for("index_html")
+    response = RedirectResponse(url=url)
+    logger.debug("Redirected to index")
+    return response
 
 @app.get('/index')
 def index_html(request: Request):
@@ -79,30 +84,19 @@ def index_html(request: Request):
 async def get_prediction(request: Request):
     reqDataForm = await request.form()
     reqData = jsonable_encoder(reqDataForm)
-    reqData.pop('firstName', None)
-    reqData.pop('lastName', None)
-    if reqData.get("hasIncome") == "No Income Proof":
-        reqData['hasIncome'] = "No"
-    else:
-        reqData['hasIncome'] = "Yes"
+    reqData_parsed = parse_request(reqData)
 
-    if reqData.get("bureau") == "Yes":
-        reqData['bureau'] = {"loanNoDelay" : int(reqData.get("loanNoDelay")), "loanWithDelay" : int(reqData.get("loanNoDelay"))}
-    else:
-        reqData['bureau'] = None
-    reqData.pop('loanNoDelay', None)
-    reqData.pop('loanWithDelay', None)
-
-    reqData['age'] = int(reqData['age'])
-    reqData['income'] = int(reqData['income'])
-
-    t = feature_engineering(parse_input(reqData))
+    t = feature_engineering(parse_input(reqData_parsed))
     if reqData.get("bureau"):
         score, loan_dec = predict_score(t, model_bureau)
     else:
         score, loan_dec = predict_score(t, model_no_bureau)
     logger.info(f"predicting..{score}")
     return {"LoanDecision" : loan_dec}
+
+@app.get("/result")
+async def get_result(request: Request):
+    return templates.TemplateResponse('result.html', context={'request': request})
 
 @app.post("/test", response_model=ResponseBody)
 async def testing(

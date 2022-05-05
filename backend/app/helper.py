@@ -25,6 +25,28 @@ OHE_FEATURES = [
  'LOAN_PURPOSE_Working Capital',
  'LOAN_PURPOSE_Car/Motorcycle']
 
+# parsing request data
+def parse_request(reqData):
+
+    reqData.pop('firstName', None)
+    reqData.pop('lastName', None)
+    if reqData.get("hasIncome") == "No Income Proof":
+        reqData['hasIncome'] = "No"
+    else:
+        reqData['hasIncome'] = "Yes"
+
+    if reqData.get("bureau") == "Yes":
+        reqData['bureau'] = {"loanNoDelay" : int(reqData.get("loanNoDelay")), "loanWithDelay" : int(reqData.get("loanNoDelay"))}
+    else:
+        reqData['bureau'] = None
+    reqData.pop('loanNoDelay', None)
+    reqData.pop('loanWithDelay', None)
+
+    reqData['age'] = int(reqData['age'])
+    reqData['income'] = int(reqData['income'])
+    return reqData
+
+
 # parsing the input data
 def parse_input(data):
     temp = pd.json_normalize(data, sep='_')
