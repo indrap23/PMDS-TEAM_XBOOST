@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 # COLUMN_NAMES = ['AGE', 'INCOME', 'GENDER', 'EDUCATION', 'LOAN_PURPOSE', 'HAS_APPLIED_BEFORE',
     #    'HAS_INCOME_VERIFICATION', "LOANS_WITHOUT_DELAYS", "LOANS_WITH_DELAYS"]
@@ -89,6 +90,16 @@ def feature_engineering(df):
         drop(columns=["EDUCATION", "LOAN_PURPOSE"])
     return df_final
 
+# get scoring grade based on the probability
+def grade_binning(proba, model):
+    dict_bin = {0:'E', 1:'D', 2:'C', 3:'B', 4:'A' }
+    x = proba # turn the probability into a numpy array
+    if model == "model_no_bureau":
+        out_x = np.where(x<=0.374,0, np.searchsorted([0.374,0.442,0.495,0.571], x))
+    elif model == "model_bureau":
+        out_x = np.where(x<=0.486,0, np.searchsorted([0.486,0.493,0.498,0.506], x))
+    return dict_bin.get(out_x[0])
+
 def predict_score(df, model):
     loan_dec = "Reject" if model.predict(df)[0] == 0 else "Approve"
-    return model.predict(df)[0], loan_dec
+    return model.predict(df)[0], model.predict_proba(df)[:,1], loan_dec

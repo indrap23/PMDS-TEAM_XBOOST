@@ -24,7 +24,8 @@ from app.helper import (
     feature_engineering, 
     parse_request,
     parse_input,
-    predict_score)
+    predict_score,
+    grade_binning)
 
 app = FastAPI()
 templates = Jinja2Templates(directory='./frontend/templates/')
@@ -72,18 +73,13 @@ except:
 async def root():
     url = app.url_path_for("index_html")
     response = RedirectResponse(url=url)
-    logger.debug("Redirected to index")
+    logger.debug("Redirected to home")
     return response
 
-@app.get('/index')
+@app.get('/home')
 def index_html(request: Request):
     # result = 'Credit Scoring Results'
-    return templates.TemplateResponse('index2.html', context={'request': request})
-
-@app.get('/card')
-def card_test(request: Request):
-    # result = 'Credit Scoring Results'
-    return templates.TemplateResponse('card.html', context={'request': request})
+    return templates.TemplateResponse('index.html', context={'request': request})
 
 @app.post("/predict")
 async def get_prediction(request: Request):
@@ -93,17 +89,22 @@ async def get_prediction(request: Request):
 
     t = feature_engineering(parse_input(reqData_parsed))
     if reqData.get("bureau"):
-        score, loan_dec = predict_score(t, model_bureau)
+        score, proba, loan_dec = predict_score(t, model_bureau)
+        grade = grade_binning(proba, 'model_bureau')
     else:
-        score, loan_dec = predict_score(t, model_no_bureau)
+        score, proba, loan_dec = predict_score(t, model_no_bureau)
+        grade = grade_binning(proba, 'model_no_bureau')
+
+    if grade in ['A', 'B'] :
+        page = 'result_approve.html'
+    else:
+        page = 'result_reject.html'
     logger.info(f"predicting..{score}")
-    return {"LoanDecision" : loan_dec}
+    logger.info(f"Loan Decision..{loan_dec}")
 
-@app.get("/result")
-async def get_result(request: Request):
-    return templates.TemplateResponse('result.html', context={'request': request, 'result':'305', 'grade':'A'})
+    return templates.TemplateResponse(page, context={'request': request, 'grade': grade})
 
-@app.post("/test", response_model=ResponseBody)
+@app.post("/apiTest", response_model=ResponseBody)
 async def testing(
     req: RequestBody = Body(
     ..., 
@@ -143,8 +144,8 @@ async def testing(
     req_dict = req.dict()
     t = feature_engineering(parse_input(req_dict))
     if req_dict.get("bureau"):
-        score, loan_dec = predict_score(t, model_bureau)
+        score, proba, loan_dec = predict_score(t, model_bureau)
     else:
-        score, loan_dec = predict_score(t, model_no_bureau)
+        score, proba, loan_dec = predict_score(t, model_no_bureau)
     logger.info(f"predicting..{score}")
     return {"LoanDecision" : loan_dec}

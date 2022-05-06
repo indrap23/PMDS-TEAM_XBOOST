@@ -15,10 +15,10 @@
     <!-- Icons font CSS-->
     
     <link href="{{ url_for('statics', path='/vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet" media="all">
-    <link href="{{ url_for('statics', path='/vendor/font-awesome-4.7/css/font-awesome.min.css') }}" rel="stylesheet" media="all">
+    <!-- <link href="{{ url_for('statics', path='/vendor/font-awesome-4.7/css/font-awesome.min.css') }}" rel="stylesheet" media="all"> -->
     <!-- Font special for pages-->
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
     <!-- Vendor CSS-->
     <link href="{{ url_for('statics', path='/vendor/select2/select2.min.css') }}" rel="stylesheet" media="all">
     <link href="{{ url_for('statics', path='/vendor/datepicker/daterangepicker.css') }}" rel="stylesheet" media="all">
@@ -37,18 +37,18 @@
                   <div class="row">
                     <div class="col">
                       <h2 class="title text-uppercase mb-0">SCORING RESULT</h2>
-                      <h1 class="font-weight-bold mb-0">{{ result }} (GRADE {{ grade }})</h1> 
+                      <h1 class="font-weight-bold mb-0">GRADE {{ grade }}</h1> 
                       
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-green text-white rounded-circle shadow">
-                        <i class="fas fa-check"></i>
+                        <i class="fa-solid fa-check"></i>
                       </div>
                     </div>
                   </div>
                   <p class="mt-3 mb-0 text-muted text-sm">
                       <span></span>
-                    <p class="label">Congratulations! You have been approved for a loan. We are going to process your application immediately</p>
+                    <p class="label-2">Congratulations! You have been approved for a loan. We are going to process your application immediately</p>
                   </p>
                   <div>
                     <button class="btn btn--radius btn--blue" id="homeButton" type="submit">Back to Home</button>
