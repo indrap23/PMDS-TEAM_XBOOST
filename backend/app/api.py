@@ -80,6 +80,11 @@ def index_html(request: Request):
     # result = 'Credit Scoring Results'
     return templates.TemplateResponse('index2.html', context={'request': request})
 
+@app.get('/card')
+def card_test(request: Request):
+    # result = 'Credit Scoring Results'
+    return templates.TemplateResponse('card.html', context={'request': request})
+
 @app.post("/predict")
 async def get_prediction(request: Request):
     reqDataForm = await request.form()
@@ -96,7 +101,7 @@ async def get_prediction(request: Request):
 
 @app.get("/result")
 async def get_result(request: Request):
-    return templates.TemplateResponse('result.html', context={'request': request})
+    return templates.TemplateResponse('result.html', context={'request': request, 'result':'305', 'grade':'A'})
 
 @app.post("/test", response_model=ResponseBody)
 async def testing(

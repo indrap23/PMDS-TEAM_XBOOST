@@ -324,6 +324,10 @@ h5,
   background-color: #11cdef !important;
 }
 
+.bg-green{
+  background-color: #1cef11 !important;
+}
+
 a.bg-info:hover,
 a.bg-info:focus,
 button.bg-info:hover,
@@ -626,8 +630,8 @@ a.text-white:focus {
 }
 
 .icon {
-  width: 3rem;
-  height: 3rem;
+  width: 5rem;
+  height: 5rem;
 }
 
 .icon i {
@@ -636,7 +640,7 @@ a.text-white:focus {
 
 .icon-shape {
   display: inline-flex;
-  padding: 12px;
+  padding: 12 px;
   text-align: center;
   border-radius: 50%;
   align-items: center;
@@ -644,7 +648,7 @@ a.text-white:focus {
 }
 
 .icon-shape i {
-  font-size: 1.25rem;
+  font-size: 2.5rem;
 }
 
 @media (min-width: 768px) {
