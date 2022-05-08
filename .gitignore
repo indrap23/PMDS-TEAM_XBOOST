@@ -7,3 +7,5 @@ output/
 jupyter/
 backup_backend/
 backup_frontend/
+frontend/public/
+frontend/src/
