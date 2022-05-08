@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Colorlib Templates">
+    <meta name="author" content="Colorlib">
+    <meta name="keywords" content="Colorlib Templates">
+
+    <!-- Title Page-->
+    <title>Your result</title>
+
+    <!-- Icons font CSS-->
+    
+    <link href="{{ url_for('statics', path='/vendor/mdi-font/css/material-design-iconic-font.min.css') }}" rel="stylesheet" media="all">
+    <!-- <link href="{{ url_for('statics', path='/vendor/font-awesome-4.7/css/font-awesome.min.css') }}" rel="stylesheet" media="all"> -->
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <!-- Vendor CSS-->
+    <link href="{{ url_for('statics', path='/vendor/select2/select2.min.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('statics', path='/vendor/datepicker/daterangepicker.css') }}" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="{{ url_for('statics', path='/css/main.css') }}" rel="stylesheet" media="all">
+    <link href="{{ url_for('statics', path='/css/card.css') }}" rel="stylesheet" media="all">
+    
+</head>
+
+<body>
+    <div class="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4" >
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h2 class="title text-uppercase mb-0">SCORING RESULT</h2>
+                      <h1 class="font-weight-bold mb-0">GRADE : {{ grade }}</h1> 
+                      
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                        <i class="fa-solid fa-xmark"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-muted text-sm">
+                      <span></span>
+                    <p class="label-2">Thank you for applying to us. Unfortunately, we cannot process your loan application at the moment.</p>
+                  </p>
+                  <div>
+                    <button class="btn btn--radius btn--blue" id="homeButton" type="submit">Back to Home</button>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="{{ url_for('statics', path='/vendor/jquery/jquery.min.js') }}"></script>
+    <!-- Vendor JS-->
+    <script src="{{ url_for('statics', path='/vendor/select2/select2.min.js') }}"></script>
+    <script src="{{ url_for('statics', path='/vendor/datepicker/moment.min.js') }}"></script>
+    <script src="{{ url_for('statics', path='/vendor/datepicker/daterangepicker.js') }}"></script>
+
+    <!-- Main JS-->
+    <script src="{{ url_for('statics', path='/js/global.js') }}"></script>
+
+    <!-- Check if customer have bureau data or not -->
+    <script type="text/javascript">
+        document.getElementById("homeButton").onclick = function () {
+        location.href = "{{ url_for('index_html') }}";
+    };
+        </script>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
+<!-- end document-->
