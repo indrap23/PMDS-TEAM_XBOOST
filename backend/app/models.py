@@ -23,10 +23,16 @@ PURPOSE_CLASS_VALUE = Literal['Working Capital',
  'Car/Motorcycle']
 
 class BureauDict(TypedDict, total=False):
+    """
+    Bureau data model
+    """
     loanWithDelay: float
     loanNoDelay: float
 
 class RequestBody(BaseModel):
+    """
+    Request form data model
+    """
     age: conint(strict=True, gt=0) 
     income : conint(strict=True, gt=0)
     gender : Literal['Male', 'Female']

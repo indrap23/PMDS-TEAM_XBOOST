@@ -27,7 +27,10 @@ from app.helper import (
     predict_score,
     grade_binning)
 
+# initialize the fastapi app
 app = FastAPI()
+
+# mount templates and static folder with Jinja
 templates = Jinja2Templates(directory='./frontend/templates/')
 app.mount("/statics", StaticFiles(directory="./frontend/statics"), name="statics")
 
@@ -57,6 +60,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+# Load model at the first instance of app initializaton
 try :
     # for uvicorn
     model_bureau = joblib.load("backend/assets/xgb_retrain_bureau.pkl")
@@ -71,6 +75,9 @@ except:
 
 @app.get("/")
 async def root():
+    """
+    Root endpoint
+    """
     url = app.url_path_for("index_html")
     response = RedirectResponse(url=url)
     logger.debug("Redirected to home")
@@ -78,11 +85,16 @@ async def root():
 
 @app.get('/home')
 def index_html(request: Request):
-    # result = 'Credit Scoring Results'
+    """
+    Endpoint for the loan application form
+    """
     return templates.TemplateResponse('index.html', context={'request': request})
 
 @app.post("/predict")
 async def get_prediction(request: Request):
+    """
+    Calculating and doing prediction
+    """
     reqDataForm = await request.form()
     reqData = jsonable_encoder(reqDataForm)
     reqData_parsed = parse_request(reqData)
@@ -109,7 +121,7 @@ async def testing(
     req: RequestBody = Body(
     ..., 
     examples = {
-            "bureaufound" : {
+            "bureaufound" : { # example of payload with bureau data available
                 "summary" : "payload with bureau data",
                 "description" : "Input example for customer with bureau data available.",
                 "value" : {
@@ -123,7 +135,7 @@ async def testing(
                     "bureau": {"loanWithDelay" : 0, "loanNoDelay" : 0}
                 }
             },
-            "nobureau" : {
+            "nobureau" : { # example of payload without bureau data
                 "summary" : "payload without bureau data",
                 "description" : "Example of request if customer does not have bureau data available.",
                 "value" : {
@@ -140,6 +152,11 @@ async def testing(
             }
         } )
     ):
+    """
+    Endpoint to test the post request for prediction
+
+    """
+
     # cast request body to dict
     req_dict = req.dict()
     t = feature_engineering(parse_input(req_dict))

@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
 
-# COLUMN_NAMES = ['AGE', 'INCOME', 'GENDER', 'EDUCATION', 'LOAN_PURPOSE', 'HAS_APPLIED_BEFORE',
-    #    'HAS_INCOME_VERIFICATION', "LOANS_WITHOUT_DELAYS", "LOANS_WITH_DELAYS"]
-
 COLUMN_NAMES = ['AGE', 'GENDER', 'INCOME', 'HAS_APPLIED_BEFORE', 'LOAN_PURPOSE', 'EDUCATION', 
        'HAS_INCOME_VERIFICATION', "LOANS_WITHOUT_DELAYS", "LOANS_WITH_DELAYS"]
 
@@ -26,8 +23,11 @@ OHE_FEATURES = [
  'LOAN_PURPOSE_Working Capital',
  'LOAN_PURPOSE_Car/Motorcycle']
 
-# parsing request data
+
 def parse_request(reqData):
+    """
+    Parse request data from application form to fit the model input structure
+    """
 
     reqData.pop('firstName', None)
     reqData.pop('lastName', None)
@@ -47,9 +47,11 @@ def parse_request(reqData):
     reqData['income'] = int(reqData['income'])
     return reqData
 
-
-# parsing the input data
 def parse_input(data):
+    """
+    Parse the model input data into pandas dataframe
+    """
+
     temp = pd.json_normalize(data, sep='_')
     colname_bureau = dict(zip(list(temp.columns), list(COLUMN_NAMES)))
     colname = dict(zip(list(temp.columns), list(COLUMN_NAMES[:-2])))
@@ -60,6 +62,10 @@ def parse_input(data):
     return temp
 
 def binning_features(df):
+    """
+    Binning age and income features
+    """
+
     #binning Age
     df.loc[ df['AGE'] <= 20, 'AGE'] = 0
     df.loc[(df['AGE'] > 20) & (df['AGE'] <= 34), 'AGE'] = 1
@@ -78,6 +84,10 @@ def binning_features(df):
     return df
 
 def feature_engineering(df):
+    """
+    Apply feature engineering to the input dataframe
+    """
+
     #converting categorical Features
     df['GENDER'] = df['GENDER'].map( {'Male': 1, 'Female': 0} ).astype(int)
     df['HAS_APPLIED_BEFORE'] = df['HAS_APPLIED_BEFORE'].map( {'Yes': 1, 'No': 0} ).astype(int)
@@ -92,6 +102,15 @@ def feature_engineering(df):
 
 # get scoring grade based on the probability
 def grade_binning(proba, model):
+    """ 
+    Binning the not default probability of each application into 5 seperate grade
+    Will only approve customer with grade A and B
+
+    Keyword arguments:
+    proba -- the probability of not default / paying back the loan
+    model -- type of model (["model_no_bureau", "model_bureau"])
+    
+    """
     dict_bin = {0:'E', 1:'D', 2:'C', 3:'B', 4:'A' }
     x = proba # turn the probability into a numpy array
     if model == "model_no_bureau":
@@ -101,5 +120,8 @@ def grade_binning(proba, model):
     return dict_bin.get(out_x[0])
 
 def predict_score(df, model):
+    """
+    Return application prediction, probability, and decision ("Reject" or "Approve")
+    """
     loan_dec = "Reject" if model.predict(df)[0] == 0 else "Approve"
     return model.predict(df)[0], model.predict_proba(df)[:,1], loan_dec

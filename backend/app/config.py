@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 
 class LogConfig(BaseModel):
-    """Logging configuration to be set for the server"""
+    """
+    Logging configuration to be set for the server
+    """
 
     LOGGER_NAME: str = "pmds"
     LOG_FORMAT: str = "%(levelprefix)s | %(asctime)s | %(message)s"
